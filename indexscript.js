@@ -192,7 +192,7 @@ function cariRoyalFlush2(){
     var cariPasanganBentuk = []
 
     for(var i = 0; i < 5; i++){
-        cariBentuk.push(barisTengah[i][barisTengah[i].length - 8])
+        cariBentuk.push(barisTengah[i][barisTengah[i].length - 8]) // contoh : barisTengah[0][16-8]
     }
 
     // Masih Flush
@@ -275,7 +275,7 @@ function cariRoyalFlush3(){
     var cariPasanganBentuk = []
 
     for(var i = 0; i < 5; i++){
-        cariBentuk.push(barisBawah[i][barisBawah[i].length - 8])
+        cariBentuk.push(barisBawah[i][barisBawah[i].length - 8])// contoh : barisTengah[0][16-8]
     }
 
     // Masih Flush
@@ -312,6 +312,50 @@ function cariRoyalFlush3(){
     }
 }
 
+var hasil = document.getElementsByClassName ("hasil")
+var poin = document.getElementsByClassName ("poin")
+var roundScore = ""
+
+function cariPoin(){
+    var nilaiTingkatan = {
+        Rh : 100,
+        Sh : 90,
+        Fd : 80,
+        Fe : 70,
+        Fh : 60,
+        St : 50,
+        Td : 40,
+        Tr : 30,
+        Or : 20,
+        Hd : 10
+    }
+
+    var tingkat1 = hasil[0].innerHTML
+    var key1 = tingkat1[0] + tingkat1[tingkat1.length-1]
+
+    var tingkat2 = hasil[1].innerHTML
+    var key2 = tingkat2[0] + tingkat2[tingkat2.length-1]
+
+    var tingkat3 = hasil[2].innerHTML
+    var key3 = tingkat3[0] + tingkat3[tingkat3.length-1]
+
+    if( nilaiTingkatan[key1] > nilaiTingkatan[key2]){
+        roundScore = 0
+        poin[0].innerHTML = "+ 0 "
+        poin[1].innerHTML = "+ 0"
+        poin[2].innerHTML = "+ 0" 
+    } else if (nilaiTingkatan[key2] > nilaiTingkatan[key3]){
+        roundScore = 0
+        poin[0].innerHTML = "+ 0 "
+        poin[1].innerHTML = "+ 0"
+        poin[2].innerHTML = "+ 0" 
+    } else {
+        roundScore = nilaiTingkatan[key1] + nilaiTingkatan[key2] + nilaiTingkatan[key3]
+        poin[0].innerHTML = "+ " + nilaiTingkatan[key1]
+        poin[1].innerHTML = "+ " + nilaiTingkatan[key2]
+        poin[2].innerHTML = "+ " + nilaiTingkatan[key3]
+    }
+}
 
 
 var kartu = document.getElementsByClassName("kartu")
@@ -339,14 +383,110 @@ function tukar(){
         cariPairBaris1()
         cariRoyalFlush2()
         cariRoyalFlush3()
+        cariPoin()
         kartu2 = true
     }
     
 }
 
+var arrScore = []
+var round = document.querySelectorAll(".round")[0]
+
+function next(){
+    arrScore.push(roundScore)
+
+    //jumlahkan semua elemen/angka pada array
+    var totalScore = arrScore.reduce((accumulator,currentValue) =>
+        accumulator + currentValue)
+
+    document.querySelectorAll(".total-score")[0].innerHTML = "Total Score : " + totalScore
+    round.innerHTML = "Round 2"
+
+    pemain1 = []
+    for(var i = 13; i < 26; i++){
+        pemain1.push(deckBaru[i])
+    }
+    munculkanDeck()
+    cariPairBaris1()
+    cariRoyalFlush2()
+    cariRoyalFlush3()
+    cariPoin()
+    btnNext.onclick = next2
+}
+
+function next2(){
+    arrScore.push(roundScore)
+
+    //jumlahkan semua elemen/angka pada array
+    var totalScore = arrScore.reduce((accumulator,currentValue) =>
+        accumulator + currentValue)
+
+    document.querySelectorAll(".total-score")[0].innerHTML = "Total Score : " + totalScore
+    round.innerHTML = "Round 3"
+
+    pemain1 = []
+    for(var i = 26; i < 39; i++){
+        pemain1.push(deckBaru[i])
+    }
+    munculkanDeck()
+    cariPairBaris1()
+    cariRoyalFlush2()
+    cariRoyalFlush3()
+    cariPoin()
+    btnNext.onclick = next3
+}
+
+function next3(){
+    arrScore.push(roundScore)
+
+    //jumlahkan semua elemen/angka pada array
+    var totalScore = arrScore.reduce((accumulator,currentValue) =>
+        accumulator + currentValue)
+
+    document.querySelectorAll(".total-score")[0].innerHTML = "Total Score : " + totalScore
+    btnNext.innerHTML = "Submit"
+    round.innerHTML = "Round 4"
+
+    pemain1 = []
+    for(var i = 39; i < 52; i++){
+        pemain1.push(deckBaru[i])
+    }
+    munculkanDeck()
+    cariPairBaris1()
+    cariRoyalFlush2()
+    cariRoyalFlush3()
+    cariPoin()
+    btnNext.onclick = submit
+}
+
+function submit(){
+    arrScore.push(roundScore)
+
+    //jumlahkan semua elemen/angka pada array
+    var totalScore = arrScore.reduce((accumulator,currentValue) =>
+        accumulator + currentValue)
+
+    document.querySelectorAll(".total-score")[0].innerHTML = "Total Score : " + totalScore
+    document.querySelectorAll(".game")[0].style.display = "none"
+    document.querySelectorAll(".round")[0].style.display = "none"
+    document.querySelectorAll(".total-score")[0].style.display = "none"
+    document.querySelectorAll(".btn-next")[0].style.display = "none"
+    document.querySelectorAll(".skor-akhir")[0].style.display = "block"
+    document.querySelectorAll(".skor-akhir")[0].innerHTML = "Your Score : " + totalScore
+    btnNext.onclick = false
+
+}
+
+
+
+
+
 for(i = 0; i < 13; i++){
     kartu[i].onclick = tukar
 }
+
+var btnNext = document.querySelectorAll(".btn-next")[0]
+btnNext.onclick = next;
 
 
 var deckBaru = buatDeck()
@@ -356,6 +496,7 @@ munculkanDeck()
 cariPairBaris1()
 cariRoyalFlush2()
 cariRoyalFlush3()
+cariPoin()
 
 
 
